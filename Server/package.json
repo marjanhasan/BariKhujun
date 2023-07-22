@@ -1,0 +1,35 @@
+{
+  "name": "barikhujun-server",
+  "version": "1.0.1",
+  "description": "A pet project of two lost souls.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marjanhasan/BariKhujun.git"
+  },
+  "keywords": [
+    "nodeJS",
+    "react",
+    "backend",
+    "frontend",
+    "fullstack"
+  ],
+  "author": "Marjan Hasan, Kazi Fahim Imam",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marjanhasan/BariKhujun/issues"
+  },
+  "homepage": "https://github.com/marjanhasan/BariKhujun#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.1",
+    "mongoose": "^7.4.0",
+    "passport": "^0.6.0"
+  }
+}

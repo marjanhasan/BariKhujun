@@ -39,6 +39,16 @@ router.get("/houses", async (req, res) => {
         // Count the total number of houses
         const totalHouses = await House.countDocuments();
 
+        // Count total page
+        let totalPage = Math.ceil(totalHouses / pageSize)
+        if (page > totalPage) {
+            res.status(404).send({
+                success: false,
+                message: "Page number not valid",
+                totalPages: totalPage,
+            });
+            return;
+        }
         // Get the paginated houses
         const houses = await House.find().limit(pageSize).skip(skip);
 
@@ -48,7 +58,7 @@ router.get("/houses", async (req, res) => {
                 message: "Returned houses",
                 data: houses,
                 currentPage: page,
-                totalPages: Math.ceil(totalHouses / pageSize),
+                totalPages: totalPage,
             });
         } else {
             res.status(404).send({

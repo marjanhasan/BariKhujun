@@ -5,10 +5,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         require: true,
     },
-    role: {
-        type: String,
-        require: true,
-    },
     phone: {
         type: String,
         require: true,
@@ -23,9 +19,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         require: true,
     },
-    role: {
-        type: String,
+    roles: {
+        type: Array,
         require: true,
+        default: "user",
     }
 });
 

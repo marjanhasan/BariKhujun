@@ -4,19 +4,13 @@ const jwt = require("jsonwebtoken");
 const passport = require("passport");
 const User = require("../models/userModel");
 const router = express.Router();
-const { body, validationResult } = require("express-validator");
+const validateUserInput = require('../middleware/validateUserInput');
 const saltRounds = 10;
 
 // User Registration
 router.post(
     "/register",
-    [
-        body("name").notEmpty().withMessage("Name is required."),
-        body("roles").isArray().withMessage("Roles should be an array\""),
-        body("phone").isString().withMessage("Phone should be a string"),
-        body("email").isEmail().withMessage("Invalid email"),
-        body("password").isLength({ min: 6 }).withMessage("Password must be at least 6 characters long"),
-    ],
+    validateUserInput,
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {

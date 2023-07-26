@@ -9,7 +9,7 @@ router.post("/addhouse", async (req, res) => {
         const houseData = await House.create(req.body);
         res.status(201).send(houseData);
     } catch (error) {
-        handleRouteError(res, error);
+        handleRouteError(res, error, null, null);
     }
 });
 // Add multiple houses
@@ -24,7 +24,7 @@ router.post("/addhouses", async (req, res) => {
         const insertedHouses = await House.insertMany(houses);
         res.status(201).send(insertedHouses);
     } catch (error) {
-        handleRouteError(res, error);
+        handleRouteError(res, error, null, null);
     }
 });
 // Get houses with pagination
@@ -67,7 +67,7 @@ router.get("/houses", async (req, res) => {
             });
         }
     } catch (error) {
-        handleRouteError(res, error)
+        handleRouteError(res, error, null, null)
     }
 });
 
@@ -87,7 +87,7 @@ router.get("/houses/:id", async (req, res) => {
             data: house,
         });
     } catch (error) {
-        handleRouteError(res, error)
+        handleRouteError(res, error, null, null)
     }
 })
 // Delete a house by ID
@@ -107,7 +107,7 @@ router.delete("/houses/:id", async (req, res) => {
             data: house,
         });
     } catch (error) {
-        handleRouteError(res, error);
+        handleRouteError(res, error, null, null);
     }
 });
 // Update a house by ID
@@ -137,7 +137,7 @@ router.put("/houses/:id", async (req, res) => {
             });
         }
     } catch (error) {
-        handleRouteError(error)
+        handleRouteError(res, error, null, null)
     }
 });
 

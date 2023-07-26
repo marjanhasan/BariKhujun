@@ -4,27 +4,15 @@ const jwt = require("jsonwebtoken");
 const passport = require("passport");
 const User = require("../models/userModel");
 const router = express.Router();
-const validateUserInput = require('../middleware/validateUserInput');
+const {validateLoginInput, handleValidationErrors, validateRegisterInput} = require("../middleware/validateUserInput");
+const handleRouteError = require("./errorHandler")
 const saltRounds = 10;
 
 // User Registration
 router.post(
     "/register",
-    validateUserInput,
+    validateRegisterInput, handleValidationErrors,
     async (req, res) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            // Customize the errors array
-            const customErrors = errors.array().map((error) => ({
-                field: error.path,
-                message: `Validation failed for field '${error.path}': ${error.msg}`, // Customize the error message
-            }));
-            return res.status(400).send({
-                success: false,
-                message: "Field validation failed",
-                errors: customErrors,
-            });
-        }
     try {
         const user = await User.findOne({ email: req.body.email });
         if (user) return res.status(400).send({
@@ -61,7 +49,7 @@ router.post(
             },
         });
     } catch (error) {
-        handleRouteError(res, error);
+        handleRouteError(res, error,null, null);
     }
 });
 
@@ -125,13 +113,15 @@ router.post(
                 data: registeredUsers,
             });
     } catch (error) {
-        handleRouteError(error)
+        handleRouteError(res, error, null, null)
     }
 });
 
 // User Login
-// User Login
-router.post("/login", async (req, res) => {
+router.post(
+    "/login",
+    validateLoginInput, handleValidationErrors,
+    async (req, res) => {
     try {
         const user = await User.findOne({ email: req.body.email });
 
@@ -142,7 +132,7 @@ router.post("/login", async (req, res) => {
             });
         }
 
-        const passwordMatch = await bcrypt.compare(req.body.password, user.password);
+const passwordMatch = await bcrypt.compare(req.body.password, user.password);
 
         if (!passwordMatch) {
             return res.status(401).send({
@@ -159,21 +149,65 @@ router.post("/login", async (req, res) => {
             name: user.name,
         };
 
-        const token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
-            expiresIn: "2h",
+        // User authentication successful, generate access token
+        const accessToken = jwt.sign({ id: user._id, name: user.name }, process.env.ACCESS_TOKEN_SECRET, {
+            expiresIn: '1h', // Access token expires in 1 hour
+        });
+
+        // Generate refresh token
+        const refreshToken = jwt.sign({ id: user._id, name: user.name }, process.env.REFRESH_TOKEN_SECRET, {
+            expiresIn: '7d', // Refresh token expires in 7 days
         });
 
         res.status(200).send({
             success: true,
             message: "User is logged in successfully",
             data: {
-                "access-token": "Bearer" + token,
+                "access-token": "Bearer" + accessToken,
+                "refresh-token": refreshToken,
+
             },
         });
     } catch (error) {
-        handleRouteError(res, error);
+        handleRouteError(res, error,null,null);
     }
 });
+//Refreshes access token for the user
+router.post('/refresh-token', async (req, res) => {
+    const refreshToken = req.headers['refresh-token']
+
+    try {
+        // Verify the refresh token
+        const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+
+        // Check if the refresh token is valid and belongs to a user
+        const user = await User.findById(decoded.id);
+        if (!user) {
+            return res.status(401).send({
+                success: false,
+                message: 'Invalid refresh token',
+            });
+        }
+
+        // Generate a new access token
+        const accessToken = jwt.sign({ id: user._id, name: user.name }, process.env.ACCESS_TOKEN_SECRET, {
+            expiresIn: '1h', // New access token expires in 1 hour
+        });
+
+        // Send the new access token to the client
+        res.status(200).send({
+            success: true,
+            message: 'Access token refreshed successfully',
+            accessToken,
+        });
+    } catch (error) {
+        return res.status(401).send({
+            success: false,
+            message: 'Invalid refresh token',
+        });
+    }
+});
+
 
 // User Profile Route (protected)
 router.get(
@@ -194,7 +228,7 @@ router.get(
                 },
             });
         } catch (error) {
-            handleRouteError(res, error);
+            handleRouteError(res, error, null, null);
         }
     }
 );

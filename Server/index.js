@@ -13,6 +13,7 @@ const app = express();
 // config file
 const envPath = path.resolve(getDynamicDirname(), "config", ".env");
 dotenv.config({ path: envPath });
+
 // Port Declaration
 const port = process.env.PORT || 5000;
 

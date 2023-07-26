@@ -10,9 +10,10 @@ const Dashboard = () => {
     <div className="lg:flex">
       <div className="basis-[30%] bg-gray-100 hidden lg:block h-screen">
         <Sidebar isOwner={isOwner} isRenter={isRenter} />
-        <MobileBar />
       </div>
+      <MobileBar />
       <div className="basis-[70%] bg-gray-50">
+        <h1>This is Dashboard</h1>
         <Outlet />
       </div>
     </div>

@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../../components/button/Button";
+import { Player } from "@lottiefiles/react-lottie-player";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -29,15 +30,18 @@ const Register = () => {
   //     });
   // };
   return (
-    <div>
-      <h1 className="text-4xl font-medium text-center my-3">
-        Welcome to Registration page
-      </h1>
-      <div className="w-full max-w-sm mx-auto mb-10 border-4 p-10">
+    <div className="md:flex my-container justify-center items-center">
+      <div className="basis-1/2">
+        <h1 className="text-4xl font-medium text-center my-3">
+          Welcome to Registration page
+        </h1>
+        <Player autoplay loop src="/register.json"></Player>
+      </div>
+      <div className="basis-1/2 w-full max-w-sm mx-auto mb-10 border-4 rounded-lg p-10">
         <label className="block mb-1 font-bold">Name:</label>
         <input
           type="text"
-          placeholder="Name"
+          placeholder="name"
           value={name}
           onChange={(e) => {
             setName(e.target.value);
@@ -49,7 +53,7 @@ const Register = () => {
         <label className="block mb-1 font-bold">Role:</label>
         <input
           type="text"
-          placeholder="Role"
+          placeholder="Owner/Renter"
           value={role}
           onChange={(e) => {
             setRole(e.target.value);
@@ -61,7 +65,7 @@ const Register = () => {
         <label className="block mb-1 font-bold">Phone Number:</label>
         <input
           type="text"
-          placeholder="phone"
+          placeholder="+880"
           value={phone}
           onChange={(e) => {
             setPhone(e.target.value);
@@ -73,7 +77,7 @@ const Register = () => {
         <label className="block mb-1 font-bold">Email:</label>
         <input
           type="text"
-          placeholder="email email@email.com"
+          placeholder="example@email.com"
           value={email}
           onChange={(e) => {
             setEmail(e.target.value);
@@ -85,7 +89,7 @@ const Register = () => {
         <label className="block mb-1 font-bold">Password:</label>
         <input
           type="password"
-          placeholder="password*****"
+          placeholder="********"
           value={password}
           onChange={(e) => {
             setPassword(e.target.value);
@@ -97,7 +101,7 @@ const Register = () => {
         <p className="my-4">
           Already have an account?{" "}
           <Link to="/login" className="text-blue-600 font-semibold">
-            Please Login
+            Login
           </Link>
         </p>
         {/* TODO: onClick={handleRegister} */}

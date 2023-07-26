@@ -20,8 +20,8 @@ const MobileNav = () => {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <Link to="/" className="inline-flex items-center">
-                  <span className="ml-2 text-xl font-bold tracking-wide txt-color">
-                    Barikhujun
+                  <span className="ml-2 text-2xl font-bold tracking-wide txt-color">
+                    Bari<span className="text-purple-400">Khujun</span>
                   </span>
                 </Link>
               </div>

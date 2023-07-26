@@ -1,18 +1,17 @@
 import { useState } from "react";
 import { FaBars, FaWindowClose } from "react-icons/fa";
-
 const MobileBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
     <div className="lg:hidden block">
-      <div className="ml-6">
+      <div className="ml-6 w-fit h-fit">
         <button
           aria-label="Open Menu"
           title="Open Menu"
           onClick={() => setIsMenuOpen(true)}
-          className="btn my-6"
+          className="bg-blue-600 p-2 rounded-md text-white"
         >
-          <FaBars />
+          <FaBars size="24" />
         </button>
       </div>
       {isMenuOpen && (
@@ -24,7 +23,7 @@ const MobileBar = () => {
               onClick={() => setIsMenuOpen(false)}
               className="btn"
             >
-              <FaWindowClose className="" />
+              <FaWindowClose size="24" />
             </button>
           </div>
         </div>

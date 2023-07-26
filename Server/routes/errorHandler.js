@@ -13,7 +13,9 @@ function handleRouteError(res, error,status,message) {
             message: message,
         })
     } else {
-        res.status(500).send({ message: "Internal server error" });
+        res.status(500).send({
+            message: "Internal server error ",
+            error,});
     }
 }
 module.exports = handleRouteError;

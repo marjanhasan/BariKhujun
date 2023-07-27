@@ -7,7 +7,6 @@ const router = express.Router();
 const {validateLoginInput, handleValidationErrors, validateRegisterInput} = require("../middleware/validateUserInput");
 const handleRouteError = require("./errorHandler")
 const {registerUser, loginUser, bulkRegistration, refreshToken, getProfile} = require("../controllers/userController");
-const saltRounds = 10;
 
 // User Registration
 router.post("/register", validateRegisterInput, handleValidationErrors, registerUser);

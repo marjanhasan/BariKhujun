@@ -2,6 +2,7 @@ const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const handleRouteError = require("../routes/errorHandler");
 const jwt = require("jsonwebtoken");
+const saltRounds = 10;
 async function registerUser (req, res) {
     try {
         const user = await User.findOne({ email: req.body.email });
@@ -105,7 +106,6 @@ async function bulkRegistration (req, res) {
 }
 // loginUser - Logs in a user
 async function loginUser (req, res) {
-    console.log("hi there")
     try {
         const user = await User.findOne({ email: req.body.email });
 
@@ -140,15 +140,15 @@ async function loginUser (req, res) {
 
         // Generate refresh token
         const refreshToken = jwt.sign({ id: user._id, name: user.name }, process.env.REFRESH_TOKEN_SECRET, {
-            expiresIn: '7d', // Refresh token expires in 7 days
+            expiresIn: '1d', // Refresh token expires in 7 days
         });
 
         res.status(200).send({
             success: true,
             message: "User is logged in successfully",
             data: {
-                "access-token": "Bearer" + accessToken,
-                "refresh-token": refreshToken,
+                "access-token": "Bearer " + accessToken,
+                "refresh-token": "Bearer " + refreshToken,
 
             },
         });

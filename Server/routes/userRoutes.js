@@ -1,11 +1,6 @@
-const express = require("express");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const router = require("express").Router();
 const passport = require("passport");
-const User = require("../models/userModel");
-const router = express.Router();
 const {validateLoginInput, handleValidationErrors, validateRegisterInput} = require("../middleware/validateUserInput");
-const handleRouteError = require("./errorHandler")
 const {registerUser, loginUser, bulkRegistration, refreshToken, getProfile} = require("../controllers/userController");
 
 // User Registration
@@ -18,6 +13,5 @@ router.post("/login", validateLoginInput, handleValidationErrors, loginUser);
 router.post('/refresh-token', refreshToken);
 // User Profile Route (protected)
 router.get("/profile", passport.authenticate("jwt", { session: false }), getProfile);
-
 
 module.exports = router;

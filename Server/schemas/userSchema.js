@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const {stringify} = require("nodemon/lib/utils");
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -23,6 +24,11 @@ const userSchema = new mongoose.Schema({
         type: Array,
         require: true,
         default: "user",
+    },
+    username: {
+        type: String,
+        require: true,
+        unique: true,
     }
 });
 

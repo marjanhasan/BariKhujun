@@ -12,6 +12,11 @@ const houseSchema = new mongoose.Schema({
     rent: Number,
     phone: Number,
     description: String,
+    owner:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
 });
 
 const House = mongoose.model("Houses", houseSchema);

@@ -5,7 +5,9 @@ const jwt = require("jsonwebtoken");
 const saltRounds = 10;
 async function registerUser (req, res) {
     try {
-        const user = await User.findOne({ email: req.body.email });
+        const user = await User.findOne({
+            $or: [{ email: req.body.email }, { username: req.body.username }],
+        });
         if (user) return res.status(400).send({
             success: false,
             message: "Email is already being used.",
@@ -43,7 +45,6 @@ async function registerUser (req, res) {
         handleRouteError(res, error,null, null);
     }
 }
-// bulkRegistration - regiters a user
 async function bulkRegistration (req, res) {
     try {
         const users = req.body; // Assuming the request body is an array of user objects
@@ -104,10 +105,11 @@ async function bulkRegistration (req, res) {
         handleRouteError(res, error, null, null)
     }
 }
-// loginUser - Logs in a user
 async function loginUser (req, res) {
     try {
-        const user = await User.findOne({ email: req.body.email });
+        const user = await User.findOne({
+            $or: [{ email: req.body.email }, { username: req.body.username }],
+        });
 
         if (!user) {
             return res.status(401).send({
@@ -127,11 +129,6 @@ async function loginUser (req, res) {
                 },
             });
         }
-
-        const payload = {
-            id: user._id,
-            name: user.name,
-        };
 
         // User authentication successful, generate access token
         const accessToken = jwt.sign({ id: user._id, name: user.name }, process.env.ACCESS_TOKEN_SECRET, {
@@ -156,10 +153,8 @@ async function loginUser (req, res) {
         handleRouteError(res, error,null,null);
     }
 }
-//
 async function refreshToken (req, res) {
     const refreshToken = req.headers['refresh-token']
-
     try {
         // Verify the refresh token
         const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
@@ -177,12 +172,19 @@ async function refreshToken (req, res) {
         const accessToken = jwt.sign({ id: user._id, name: user.name }, process.env.ACCESS_TOKEN_SECRET, {
             expiresIn: '1h', // New access token expires in 1 hour
         });
+        // Generate refresh token
+        const refreshToken = jwt.sign({ id: user._id, name: user.name }, process.env.REFRESH_TOKEN_SECRET, {
+            expiresIn: '1d', // Refresh token expires in 7 days
+        });
 
         // Send the new access token to the client
         res.status(200).send({
             success: true,
             message: 'Access token refreshed successfully',
-            accessToken,
+            data:{
+                "Access Token": accessToken,
+                "Refresh Token": refreshToken,
+            },
         });
     } catch (error) {
         return res.status(401).send({
@@ -191,7 +193,6 @@ async function refreshToken (req, res) {
         });
     }
 }
-
 async function getProfile(req, res) {
     try {
         const { _id, name, email } = req.user;

@@ -1,109 +1,11 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
-const handleRouteError = require("../routes/errorHandler");
+const handleRouteError = require("../utils/errorHandler");
 const jwt = require("jsonwebtoken");
+const {handleRegisterUser} = require("../utils/utils");
 const saltRounds = 10;
 async function registerUser (req, res) {
-    try {
-        const user = await User.findOne({
-            $or: [{ email: req.body.email }, { username: req.body.username }],
-        });
-        if (user) return res.status(400).send({
-            success: false,
-            message: "Email is already being used.",
-            data: {
-                email: user.email,
-            },
-        });
-
-        const hash = await bcrypt.hash(req.body.password, saltRounds);
-
-        // Check if roles are provided and if 'user' role is missing, add it to the roles array
-        let roles = req.body.roles || [];
-        if (!roles.includes('user')) {
-            roles.push('user');
-        }
-
-        const newUser = new User({
-            name: req.body.name,
-            roles: roles,
-            phone: req.body.phone,
-            email: req.body.email,
-            password: hash,
-        });
-
-        await newUser.save();
-        res.send({
-            success: true,
-            message: "User is created successfully",
-            data: {
-                id: newUser._id,
-                name: newUser.name,
-            },
-        });
-    } catch (error) {
-        handleRouteError(res, error,null, null);
-    }
-}
-async function bulkRegistration (req, res) {
-    try {
-        const users = req.body; // Assuming the request body is an array of user objects
-
-        if (!Array.isArray(users)) {
-            return res.send({
-                success: false,
-                message: "Invalid request",
-                data: {
-                    desc: "Provide valid array",
-                },
-            });
-        }
-
-        if (users.length === 0) {
-            return res.send({
-                success: true,
-                message: "Invalid request",
-                data: {
-                    desc: "Request body can not be empty"
-                },
-            });
-        }
-
-        const existingEmails = await User.find({ email: { $in: users.map(user => user.email) } });
-        const existingEmailSet = new Set(existingEmails.map(user => user.email));
-
-        const newUserPromises = users.map(async user => {
-            if (!existingEmailSet.has(user.email)) {
-                if (!user.roles) {
-                    user.roles = ["user"]; // Initialize roles array with "user" if not provided
-                } else if (!user.roles.includes("user")) {
-                    user.roles.push("user"); // Add "user" to roles array if not already present
-                }
-
-                const hash = await bcrypt.hash(user.password, saltRounds);
-                const newUser = new User({
-                    name: user.name,
-                    roles: user.roles,
-                    phone: user.phone,
-                    email: user.email,
-                    password: hash,
-                });
-                return newUser.save();
-            }
-            return null;
-        });
-
-        const insertedUsers = await Promise.all(newUserPromises);
-
-        const registeredUsers = insertedUsers.filter(user => user !== null);
-        res.status(201).send({
-            success: true,
-            message: "Users registered Successfully",
-            data: registeredUsers,
-        });
-    } catch (error) {
-        handleRouteError(res, error, null, null)
-    }
+    await handleRegisterUser(req, res, req.body)
 }
 async function loginUser (req, res) {
     try {
@@ -212,4 +114,4 @@ async function getProfile(req, res) {
     }
 }
 
-module.exports = {registerUser, loginUser, bulkRegistration, refreshToken, getProfile}
+module.exports = {registerUser, loginUser, refreshToken, getProfile}

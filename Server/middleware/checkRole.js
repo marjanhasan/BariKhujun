@@ -8,7 +8,7 @@ function checkRole(role) {
             next();
         } else {
             res.status(403).json({
-                messaage: "Access Denied"
+                message: "Access Denied"
             });
         }
     }

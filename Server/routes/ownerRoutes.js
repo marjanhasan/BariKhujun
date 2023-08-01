@@ -1,4 +1,4 @@
-const {getOwnerHouses} = require("../controllers/ownerController");
+const {getOwnerHouses, addHouseByOwner, updateHouseByOwner, deleteHouseByOwner} = require("../controllers/ownerController");
 const router = require("express").Router();
 
 router.get("/houses", getOwnerHouses);

@@ -7,9 +7,10 @@ const passport = require("passport");
 const app = express();
 const checkRole = require("./middleware/checkRole");
 // Import routes
-const houseRoutes = require("./routes/houseRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 const userRoutes = require("./routes/userRoutes");
 const ownerRoutes = require("./routes/ownerRoutes");
+const publicRoutes = require("./routes/publicRoutes")
 const miscellaneousRoutes = require("./routes/miscellaneousRoutes");
 // config file
 const envPath = path.resolve(getDynamicDirname(), "config", ".env");
@@ -30,9 +31,10 @@ app.use(passport.initialize());
 require("./config/passport");
 
 // Use routes
-app.use(houseRoutes);
-app.use(userRoutes);
+app.use('/admin', checkRole("admin"), adminRoutes);
+app.use('/user/', checkRole("user"), userRoutes);
 app.use('/owner', checkRole("owner"), ownerRoutes);
+app.use(publicRoutes)
 app.use(miscellaneousRoutes);
 
 // Start the server

@@ -5,8 +5,6 @@ const {registerUser, loginUser, bulkRegistration, refreshToken, getProfile} = re
 
 // User Registration
 router.post("/register", validateRegisterInput, handleValidationErrors, registerUser);
-// Bulk User Registration
-router.post("/bulk-register", bulkRegistration);
 // User Login
 router.post("/login", validateLoginInput, handleValidationErrors, loginUser);
 //Refreshes access token for the user

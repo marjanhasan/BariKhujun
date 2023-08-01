@@ -1,11 +1,10 @@
 const passport = require("passport");
-const { Strategy: JwtStrategy, ExtractJwt } = require("passport-jwt");
+const { Strategy: JwtStrategy, ExtractJwt, Strategy} = require("passport-jwt");
 const User = require("../models/userModel");
 
 const opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 opts.secretOrKey = process.env.ACCESS_TOKEN_SECRET;
-
 passport.use(
     new JwtStrategy(opts, async (jwt_payload, done) => {
         try {

@@ -1,29 +1,17 @@
-// import axios from "axios";
+import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../../components/button/Button";
 import { Player } from "@lottiefiles/react-lottie-player";
-import CheckBoxGroup from "../../components/checkBoxGroup/CheckBoxGroup";
 
 const Register = () => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [username, setUserName] = useState("");
-  const [selectedOptions, setSelectedOptions] = useState([]);
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const handleRegister = () => {
-    // axios
-    //   .post("http://localhost:3000/register", value)
-    //   .then(() => {
-    //     console.log("User registered");
-    //     navigate("/");
-    //   })
-    //   .catch((err) => {
-    //     console.log(err.message);
-    //     navigate("/register");
-    //   });
     const value = {
       name,
       username,
@@ -32,6 +20,17 @@ const Register = () => {
       password,
     };
     console.log(value);
+
+    axios
+      .post("http://localhost:8000/register", value)
+      .then(() => {
+        console.log("User registered");
+        navigate("/");
+      })
+      .catch((err) => {
+        console.log(err.message);
+        navigate("/register");
+      });
   };
   return (
     <div className="md:flex my-container justify-center items-center">

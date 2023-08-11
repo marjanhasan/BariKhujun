@@ -4,9 +4,6 @@ const handleRouteError = require("../utils/errorHandler");
 const jwt = require("jsonwebtoken");
 const {handleRegisterUser} = require("../utils/utils");
 const saltRounds = 10;
-async function registerUser (req, res) {
-    await handleRegisterUser(req, res, req.body)
-}
 async function loginUser (req, res) {
     try {
         const user = await User.findOne({
@@ -115,4 +112,4 @@ async function getProfile(req, res) {
     }
 }
 
-module.exports = {registerUser, loginUser, refreshToken, getProfile}
+module.exports = {loginUser, refreshToken, getProfile}

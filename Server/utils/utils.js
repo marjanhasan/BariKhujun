@@ -136,9 +136,10 @@ const handleDeleteHouse = async (req, res) => {
 }
 const handleRegisterUser = async (req, res, userData) => {
     try {
-        const user = await User.findOne({
-            $or: [{ email: userData.email }, { username: userData.username }],
-        });
+        // const user = await User.findOne({
+        //     $or: [{ email: userData.email }, { username: userData.username }],
+        // });
+        let user = await User.findOne({email: req.email})
         if (user) return res.status(400).send({
             success: false,
             message: "Email is already being used.",
@@ -146,6 +147,15 @@ const handleRegisterUser = async (req, res, userData) => {
                 email: user.email,
             },
         });
+        user = await User.findOne({username: req.username})
+        if (user) return res.status(400).send({
+            success: false,
+            message: "Username is already being used.",
+            data: {
+                email: user.username,
+            },
+        });
+
 
         const hash = await bcrypt.hash(userData.password, saltRounds);
 

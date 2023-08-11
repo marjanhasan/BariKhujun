@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { FaWindowClose } from "react-icons/fa";
+import DiscoverPageContent from "./DiscoverPageContent";
 // import axios from "axios";
 
 const Discover = () => {
@@ -14,6 +15,7 @@ const Discover = () => {
   const [houseData, setHouseData] = useState([]);
   const [query, setQuery] = useState({});
   const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const { searchQ, cityQ, availableQ, rentQ, bedroomsQ, bathroomsQ, roomQ } =
       query;
@@ -25,11 +27,25 @@ const Discover = () => {
     //   .catch((err) => {
     //     console.log(err);
     //   });
+    setLoading(true);
+    setTimeout(() => {
+      fetch("./room.json")
+        .then((res) => res.json())
+        .then((data) => {
+          setLoading(false);
+          setHouseData(data);
+        })
+        .catch((err) => {
+          setLoading(false);
+          console.log(err);
+          setHouseData("");
+        });
+    }, 3000);
   }, [query]);
   return (
-    <div className="lg:flex gap-4">
+    <div className="lg:flex">
       {/* desktop sidebar */}
-      <div className="basis-[30%] bg-gray-100 hidden lg:block ">
+      <div className="basis-[30%] bg-gradient-to-r from-cyan-100 to-blue-100 hidden lg:block ">
         <div className="flex ml-10 mb-4">
           <input
             type="text"
@@ -265,41 +281,13 @@ const Discover = () => {
         )}
       </div>
 
-      {/* home page content  */}
-      <div className="basis-[70%] bg-gray-50">
-        <h1 className="text-center font-semibold text-4xl my-12">
-          Welcome To House Hunting!
-        </h1>
-        <div className="grid lg:grid-cols-3 gap-3 mx-5">
-          {/* {houseData.map((data) => (
-            <Cards key={data._id} data={data} />
-          ))} */}
-        </div>
-        {/* pagination */}
-        <div className="flex justify-center my-6">
-          <div className="join mx-auto">
-            <button
-              className="join-item btn"
-              onClick={() => {
-                page === 1 ? setPage(1) : setPage(page - 1);
-              }}
-              disabled={page === 1}
-            >
-              «
-            </button>
-            <button className="join-item btn">{page}</button>
-            <button
-              className="join-item btn"
-              onClick={() => {
-                page === 10 ? setPage(10) : setPage(page + 1);
-              }}
-              disabled={page === 10}
-            >
-              »
-            </button>
-          </div>
-        </div>
-      </div>
+      {/* Discover page content  */}
+      <DiscoverPageContent
+        loading={loading}
+        houseData={houseData}
+        page={page}
+        setPage={setPage}
+      />
     </div>
   );
 };

@@ -9,6 +9,7 @@ import Register from "../pages/register/Register";
 import AddHouse from "../components/owner/AddHouse";
 import MyHouse from "../components/owner/MyHouse";
 import Bookings from "../components/renter/Bookings";
+import Loader from "../components/loader/Loader";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -30,6 +31,10 @@ export const router = createBrowserRouter([
       {
         path: "/register",
         element: <Register />,
+      },
+      {
+        path: "/l",
+        element: <Loader />,
       },
     ],
   },

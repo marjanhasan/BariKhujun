@@ -3,32 +3,36 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../../components/button/Button";
 import { Player } from "@lottiefiles/react-lottie-player";
+import CheckBoxGroup from "../../components/checkBoxGroup/CheckBoxGroup";
 
 const Register = () => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
-  const [role, setRole] = useState("");
+  const [username, setUserName] = useState("");
+  const [selectedOptions, setSelectedOptions] = useState([]);
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const handleRegister = () => {
-  //   axios
-  //     .post("http://localhost:5000/register", {
-  //       name,
-  //       role,
-  //       phone,
-  //       email,
-  //       password,
-  //     })
-  //     .then(() => {
-  //       console.log("User registered");
-  //       navigate("/");
-  //     })
-  //     .catch((err) => {
-  //       console.log(err.message);
-  //       navigate("/register");
-  //     });
-  // };
+  const handleRegister = () => {
+    // axios
+    //   .post("http://localhost:3000/register", value)
+    //   .then(() => {
+    //     console.log("User registered");
+    //     navigate("/");
+    //   })
+    //   .catch((err) => {
+    //     console.log(err.message);
+    //     navigate("/register");
+    //   });
+    const value = {
+      name,
+      username,
+      phone,
+      email,
+      password,
+    };
+    console.log(value);
+  };
   return (
     <div className="md:flex my-container justify-center items-center">
       <div className="basis-1/2">
@@ -50,18 +54,22 @@ const Register = () => {
           className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
         />
         <br />
-        <label className="block mb-1 font-bold">Role:</label>
+        <label className="block mb-1 font-bold">User Name:</label>
         <input
           type="text"
-          placeholder="Owner/Renter"
-          value={role}
+          placeholder="User name"
+          value={username}
           onChange={(e) => {
-            setRole(e.target.value);
+            setUserName(e.target.value);
           }}
           required
           className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
         />
         <br />
+        {/* <CheckBoxGroup
+          setSelectedOptions={setSelectedOptions}
+          selectedOptions={selectedOptions}
+        /> */}
         <label className="block mb-1 font-bold">Phone Number:</label>
         <input
           type="text"
@@ -107,7 +115,11 @@ const Register = () => {
         {/* TODO: onClick={handleRegister} */}
         <div>
           {1 ? (
-            <Button label={"Register"} type={"submit"} />
+            <Button
+              onClick={handleRegister}
+              label={"Register"}
+              type={"submit"}
+            />
           ) : (
             <Button label={"Register"} type={"submit"} disabled={true} />
           )}

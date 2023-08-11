@@ -97,7 +97,7 @@ async function refreshToken (req, res) {
 }
 async function getProfile(req, res) {
     try {
-        const { _id, name, email } = req.user;
+        const { _id, name, email, username } = req.user;
         return res.status(200).send({
             success: true,
             message: "User authenticated",
@@ -106,6 +106,7 @@ async function getProfile(req, res) {
                     id: _id,
                     name: name,
                     email: email,
+                    username: username,
                 }
             },
         });

@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const passport = require("passport");
 const {validateLoginInput, handleValidationErrors, validateRegisterInput} = require("../middleware/validateUserInput");
-const {registerUser, loginUser, bulkRegistration, refreshToken, getProfile} = require("../controllers/userController");
+const {registerUser, loginUser, refreshToken, getProfile} = require("../controllers/userController");
 
 // User Registration
 router.post("/register", validateRegisterInput, handleValidationErrors, registerUser);

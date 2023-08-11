@@ -2,8 +2,26 @@ const House = require("../models/houseModel");
 const User = require("../models/userModel");
 const handleRouteError = require("../utils/errorHandler");
 const bcrypt = require("bcrypt");
-const {handleAddHouse, handleUpdateHouse, handleRegisterUser} = require("../utils/utils");
+const {handleAddHouse, handleUpdateHouse, handleRegisterUser, handleDeleteHouse} = require("../utils/utils");
 
+async function getProfile (req, res) {
+    try {
+        const { _id, name, email } = req.user;
+        return res.status(200).send({
+            success: true,
+            message: "User authenticated",
+            data: {
+                "user": {
+                    id: _id,
+                    name: name,
+                    email: email,
+                }
+            },
+        });
+    } catch (error) {
+        handleRouteError(res, error, null, null);
+    }
+};
 async function addHouse (req, res) {
     await handleAddHouse(req, res, req.body)
 };
@@ -40,30 +58,14 @@ async function addHouses (req, res) {
     }
 };
 async function deleteHouse (req, res) {
-    try {
-        const house = await House.findByIdAndDelete(req.params.id);
-        if (!house) {
-            return res.status(404).send({
-                success: false,
-                message: "House not found with this id",
-            });
-        }
-
-        res.status(200).send({
-            success: true,
-            message: "House deleted",
-            data: house,
-        });
-    } catch (error) {
-        handleRouteError(res, error, null, null);
-    }
+    await handleDeleteHouse(req, res);
 };
 async function updateHouse (req, res) {
     await handleUpdateHouse(req, res, req.body);
 };
 async function registerUser (req, res) {
     await handleRegisterUser(req, res, req.body)
-}
+};
 async function updateUser (req, res) {
     try {
         const userId = req.params.userId;
@@ -102,7 +104,7 @@ async function updateUser (req, res) {
     } catch (error) {
         handleRouteError(res, error, null, null);
     }
-}
+};
 async function deleteUser (req, res) {
     try {
         const user = await User.findByIdAndDelete(req.params.id);
@@ -183,4 +185,4 @@ async function bulkRegistration (req, res) {
     }
 };
 
-module.exports = {addHouse, addHouses, updateHouse, deleteHouse, bulkRegistration, addUser: registerUser, updateUser, deleteUser};
+module.exports = {getProfile, addHouse, addHouses, updateHouse, deleteHouse, bulkRegistration, registerUser, updateUser, deleteUser};

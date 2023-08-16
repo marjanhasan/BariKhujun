@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const {getHouses, getHouse, registerUser, loginUser} = require("../controllers/publicController");
-const {handleValidationErrors, validateRegisterInput} = require("../middleware/validateUserInput");
+const {handleValidationErrors, validateRegisterInput, validateLoginInput} = require("../middleware/validateUserInput");
 
 // User Registration
 router.post("/register", validateRegisterInput, handleValidationErrors, registerUser);

@@ -5,7 +5,7 @@ const express = require("express");
 const cors = require("cors");
 const passport = require("passport");
 const app = express();
-const checkRole = require("./middleware/checkRole");
+const authenticateUser = require("./middleware/authentication")
 // Import routes
 const adminRoutes = require("./routes/adminRoutes");
 const userRoutes = require("./routes/userRoutes");
@@ -31,9 +31,9 @@ app.use(passport.initialize());
 require("./config/passport");
 
 // Use routes
-app.use('/admin', checkRole("admin"), adminRoutes);
-app.use('/user/', checkRole("user"), userRoutes);
-app.use('/owner', checkRole("owner"), ownerRoutes);
+app.use('/admin', authenticateUser("admin"), adminRoutes);
+app.use('/user', authenticateUser("user"), userRoutes);
+app.use('/owner', authenticateUser("owner"), ownerRoutes);
 app.use(publicRoutes)
 app.use(miscellaneousRoutes);
 

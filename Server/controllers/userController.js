@@ -2,13 +2,9 @@ const User = require("../models/userModel");
 const handleRouteError = require("../utils/errorHandler");
 const jwt = require("jsonwebtoken");
 async function refreshToken (req, res) {
-    const refreshToken = req.headers['refresh-token']
     try {
-        // Verify the refresh token
-        const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-
         // Check if the refresh token is valid and belongs to a user
-        const user = await User.findById(decoded.id);
+        const user = await User.findById(req.user.id);
         if (!user) {
             return res.status(401).send({
                 success: false,

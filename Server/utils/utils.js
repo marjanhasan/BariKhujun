@@ -153,6 +153,7 @@ const handleRegisterUser = async (req, res, userData) => {
             message: "Username is already being used.",
             data: {
                 email: user.username,
+                username: user.username,
             },
         });
 

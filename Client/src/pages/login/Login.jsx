@@ -1,4 +1,4 @@
-// import axios from "axios";
+import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../../components/button/Button";
@@ -8,22 +8,24 @@ const Login = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
-  // const handleLogin = () => {
-  //   axios
-  //     .post("http://localhost:5000/login", {
-  //       name,
-  //       password,
-  //     })
-  //     .then((user) => {
-  //       localStorage.setItem("token", user.data.token);
-  //       console.log("User registered");
-  //       navigate("/");
-  //     })
-  //     .catch((err) => {
-  //       console.log(err.message);
-  //       navigate("/login");
-  //     });
-  // };
+  const handleLogin = () => {
+    const value = {
+      user,
+      password,
+    };
+    axios
+      .post("http://localhost:8000/login", value)
+      .then((res) => {
+        // console.log(res.data.data["access-token"]);
+        localStorage.setItem("access-token", res.data.data["access-token"]);
+        console.log("User login succesfully", res);
+        navigate("/");
+      })
+      .catch((err) => {
+        console.log(err);
+        navigate("/login");
+      });
+  };
   return (
     <div className="md:flex flex-row-reverse my-container justify-center items-center">
       <div className="basis-1/2">
@@ -66,7 +68,7 @@ const Login = () => {
         {/* TODO: onClick={handleLogin} */}
         <div>
           {1 ? (
-            <Button label={"Login"} type={"submit"} />
+            <Button onClick={handleLogin} label={"Login"} type={"submit"} />
           ) : (
             <Button label={"Login"} type={"submit"} disabled={true} />
           )}
